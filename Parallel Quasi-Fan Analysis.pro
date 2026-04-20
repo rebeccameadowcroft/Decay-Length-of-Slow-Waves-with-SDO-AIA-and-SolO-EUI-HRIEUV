@@ -32,18 +32,18 @@ end
 
 cd, '/Users/rebecca/Documents/PhD Year 3/Project 6 - Decay Length /Correct Parallel'
 
-; Load pre-selected AIA data and index
-AIA_index = aia_index
-AIA_data  = aia_data
-EUI_index = eui_index_spacealigned
-EUI_data  = eui_data_spacealigned_corrected
-
-aia_cad=12.
-eui_cad=5.
-
-; Compute AIA and EUI pixel sizes (in radians per pixel)
-aia_pixel_size = mean(aia_index.dsun_obs)/1e6 * mean(aia_index.cdelt1) * !dpi/180./3600.
-eui_pixel_size = mean(eui_index.dsun_obs)/1e6 * mean(eui_index.cdelt1) * !dpi/180./3600.
+;; Load pre-selected AIA data and index
+;AIA_index = aia_index
+;AIA_data  = aia_data
+;EUI_index = eui_index_spacealigned
+;EUI_data  = eui_data_spacealigned_corrected
+;
+;aia_cad=12.
+;eui_cad=5.
+;
+;; Compute AIA and EUI pixel sizes (in radians per pixel)
+;aia_pixel_size = mean(aia_index.dsun_obs)/1e6 * mean(aia_index.cdelt1) * !dpi/180./3600.
+;eui_pixel_size = mean(eui_index.dsun_obs)/1e6 * mean(eui_index.cdelt1) * !dpi/180./3600.
 
 ;; ALIGNING DATA IN TIME
 ;;----------------------------------------------------------------------------------
@@ -278,19 +278,24 @@ fixed_eui_ys=[173.21834, 172.66689, 172.66689, 175.97557, 180.93859, $
 ;      eui_td_1, eui_td_2, eui_td_3
 ;;***
 
-;;-----------------------QUICK RUN ANALYSIS HERE!!!!!!-----------------------------------------
-;restore, 'all_td_maps.sav'
-;cd, '/Users/rebecca/Documents/PhD Year 3/Project 6 - Decay Length /Correct Parallel'
-;crop_options=[1,2,1]
-;dl_regions=[5,25, 20,40, 5,25, 0,20, 10,30 ]
+;;;-----------------------QUICK RUN ANALYSIS HERE!!!!!!-----------------------------------------
+;;restore, 'all_td_maps.sav'
+;cd, '/Users/rebecca/Documents/PhD Year 3/Project 6 - Decay Length /Review Response/Parallel'
+;crop_options=[0,0,0]
+;;dl_regions=[5,25, 20,40, 5,25, 0,20, 10,30 ]
+;dl_regions=[0,10, 0,10, 0,10]
+;aia_pixel_size=0.431 & aia_cad=12.
+;eui_pixel_size=0.304 & eui_cad=5.
+;
 ;for i = 1, 3 do begin
-;  aia_name='aia_td_' + STRTRIM(i, 2) & eui_name='eui_td_'+strtrim(i,2)
+;  crop_option=crop_options[i-1]
+;  aia_name='event2_aia_td_' + STRTRIM(i, 2) & eui_name='event2_eui_td_'+strtrim(i,2)
 ;  aia_map=scope_varfetch(aia_name) & eui_map=scope_varfetch(eui_name)
 ;  per_spe_dl, aia_map, aia_index, aia_pixel_size, aia_cad, $
-;              eui_map, eui_index, eui_pixel_size, eui_cad, 4, $
-;              SAVENAME='slit_' + strtrim(i, 2)
+;              eui_map, eui_index, eui_pixel_size, eui_cad, 4, dl_region=dl_regions, crop_option=crop_option,$
+;              SAVENAME='Review_slit_' + strtrim(i, 2)
 ;endfor
-;
+;;
 ;print, 'ANALYSIS DONE!'
 
 ;; Plot AIA and EUI FoV with all 5 selected CURVED slits
@@ -456,194 +461,194 @@ fixed_eui_ys=[173.21834, 172.66689, 172.66689, 175.97557, 180.93859, $
 ;MAKING ALL PLOTS FOR PAPER-------------------------------------------------------------------------------------
 ;---------------------------------------------------------------------------------------------------------------
 ;---------------------------------------------------------------------------------------------------------------
-;cd, '/Users/rebecca/Documents/PhD Year 3/Project 5 - Quasi-Fan/Final Figures'
+;cd, '/Users/rebecca/Documents/PhD Year 3/Project 6 - Decay Length /Review Response/Parallel'
 ;path='/Users/rebecca/Documents/PhD Year 3/Project 5 - Quasi-Fan/Final Figures'
 
-;Fig. 1 - Setting the Scene  (.eps)
-cd, '/Users/rebecca/Documents/PhD Year 3/Project 6 - Decay Length /Correct Parallel/Figures'
-path = '/Users/rebecca/Documents/PhD Year 3/Project 6 - Decay Length /Correct Parallel/Figures'
-file171full = file_search(path+'/full_disc.fits')
-fileHMI = file_search(path+'/hmi.fits')
-file174full = file_search(path+'/full_hrieuv.fits')
-;help, file174full
-;print, file174full
-read_sdo, file171full, index171full, data171full, /use_shared, /uncomp_delete
-read_sdo, fileHMI, indexHMI, dataHMI, /use_shared, /uncomp_delete
-mreadfits_tilecomp, file174full, index174full, data174full
-;eui_readfits, file174full, index174full, data174full, quiet=quiet
-hmi_pixel_size=mean(indexHMI.dsun_obs)/1e6 * mean(indexHMI.cdelt1) * !dpi/180./3600.
-aia2hmi=aia_pixel_size/hmi_pixel_size
-crop_x1 = 40 & crop_y1 = 35 
-crop_x2 = 80 & crop_y2 = 75
-hmi_crop_x1 = 47 & hmi_crop_y1 = 44
-hmi_crop_x2 = 87 & hmi_crop_y2 = 84
-dataHMI=dataHMI[hmi_crop_x1/hmi_pixel_size: hmi_crop_x2/hmi_pixel_size, hmi_crop_y1/hmi_pixel_size: hmi_crop_y2/hmi_pixel_size]
-data171=aia_data_final[crop_x1/aia_pixel_size: crop_x2/aia_pixel_size, crop_y1/aia_pixel_size: crop_y2/aia_pixel_size, 0]
-data174=eui_data_final[crop_x1/eui_pixel_size: crop_x2/eui_pixel_size, crop_y1/eui_pixel_size: crop_y2/eui_pixel_size, 0]
-
-left=0.07
-right=0.05
-bg=0.0
-tg=0.05
-mg=0.08
-bottom=0.07
-top=0.03
-wx=(1-right-left-2*bg)/3.
-bigwx=(1-left-right-tg)/2.
-
-height=bottom+top+wx+bigwx+mg
-wy=wx/height
-bigwy=bigwx/height
-;print, 'plot height = '+ strtrim(height, 2)
-
-
-;checking with usual plotting
+;;Fig. 1 - Setting the Scene  (.eps)
+;cd, '/Users/rebecca/Documents/PhD Year 3/Project 6 - Decay Length /Review Response/Parallel'
+;path = '/Users/rebecca/Documents/PhD Year 3/Project 6 - Decay Length /Correct Parallel/Figures'
+;file171full = file_search(path+'/full_disc.fits')
+;fileHMI = file_search(path+'/hmi.fits')
+;file174full = file_search(path+'/full_hrieuv.fits')
+;;help, file174full
+;;print, file174full
+;read_sdo, file171full, index171full, data171full, /use_shared, /uncomp_delete
+;read_sdo, fileHMI, indexHMI, dataHMI, /use_shared, /uncomp_delete
+;mreadfits_tilecomp, file174full, index174full, data174full
+;;eui_readfits, file174full, index174full, data174full, quiet=quiet
+;hmi_pixel_size=mean(indexHMI.dsun_obs)/1e6 * mean(indexHMI.cdelt1) * !dpi/180./3600.
+;aia2hmi=aia_pixel_size/hmi_pixel_size
+;crop_x1 = 40 & crop_y1 = 35 
+;crop_x2 = 80 & crop_y2 = 75
+;hmi_crop_x1 = 47 & hmi_crop_y1 = 44
+;hmi_crop_x2 = 87 & hmi_crop_y2 = 84
+;dataHMI=dataHMI[hmi_crop_x1/hmi_pixel_size: hmi_crop_x2/hmi_pixel_size, hmi_crop_y1/hmi_pixel_size: hmi_crop_y2/hmi_pixel_size]
+;data171=aia_data_cropped[*,*,0];[crop_x1/aia_pixel_size: crop_x2/aia_pixel_size, crop_y1/aia_pixel_size: crop_y2/aia_pixel_size, 0]
+;data174=eui_data_cropped[*,*,0];[crop_x1/eui_pixel_size: crop_x2/eui_pixel_size, crop_y1/eui_pixel_size: crop_y2/eui_pixel_size, 0]
+;
+;left=0.07
+;right=0.05
+;bg=0.0
+;tg=0.05
+;mg=0.08
+;bottom=0.07
+;top=0.03
+;wx=(1-right-left-2*bg)/3.
+;bigwx=(1-left-right-tg)/2.
+;
+;height=bottom+top+wx+bigwx+mg
+;wy=wx/height
+;bigwy=bigwx/height
+;;print, 'plot height = '+ strtrim(height, 2)
+;
+;
+;;checking with usual plotting
+;;set_plot, 'X'
+;plot_width=1000
+;;wdef, 4, plot_width, plot_width*height
+;;!p.charsize=3
+;;!p.charthick=1
+;;!p.thick=2
+;
+;;creating good quality plot for paper
+;set_plot,'ps'
+;!p.charthick=2.5
+;!p.charsize=1.5
+;!p.background=255
+;!p.font=-1
+;!p.multi=[0,1,5]
+;!p.color=0
+;;Use DEVICE to set PostScript device options
+;width_eps=17
+;height_eps=width_eps*height
+;device,filename='Setting the Scene.eps',$
+;  xsize=width_eps,ysize=height_eps,$
+;  xoff=(21.0-width_eps)/2.0,yoff=(29.7-height_eps)/2.0,$
+;  /color,bits=8,/Helvetica,isolatin1=1;,/bold
+;
+;
+;
+;;Plot full sun 171
+;    aia_lct, wave=171, /load
+;    plot_image, (data171full)^0.4, xtickformat="(A1)", ytickformat="(A1)",$; xtitle='Solar X [Mm]', ytitle='Solar Y [Mm]';, $
+;      position = [left, bottom+wy+mg, left+bigwx, bottom+wy+mg+bigwy], /nosquare, title='AIA 171 Full FoV'
+;;    xyouts, side+0.005, bottom+4*siz+gap+0.018, strtrim(index_1[0].date_obs,2), charsize=0.8, , color=255, /normal
+;    xyouts, left+0.01, bottom+wy+mg+bigwy-0.021, '(a) '+strtrim(index171full[0].date_obs,2), charsize=0.8, color=255, /normal
+;
+;;Plot full HRIEUV
+;    plot_image, alog(data174full), ytickformat="(A1)", xtickformat="(A1)",$
+;      position = [left+bigwx+tg, bottom+wy+mg, 1-right, bottom+wy+mg+bigwy], /nosquare, title='HRIEUV Full FoV'
+;    xyouts, left+bigwx+tg+0.01, bottom+wy+mg+bigwy-0.021, '(b) '+strtrim(index174full[0].date_obs,2), charsize=0.8, color=255, /normal
+;
+;;Plot HMI crop region
+;    loadct, 0, /silent
+;    plot_image, alog(dataHMI), xtitle='Solar X [Mm]', ytitle='Solar Y [Mm]',$
+;      position = [left, bottom, left+wx, bottom+wy], scale=[hmi_pixel_size, hmi_pixel_size], $
+;      title='HMI Continuum ROI', xticks= 4, xtickv=[0, 10, 20, 30]
+;    xyouts, left+0.01,bottom+wy-0.021, '(c)', charsize=0.8, color=0, /normal
+;    for i = 0, 2 do begin
+;      aia_x=fixed_aia_xs[i*5:(i+1)*5-1]-crop_x1/aia_pixel_size
+;      aia_y=fixed_aia_ys[i*5:(i+1)*5-1]-crop_y1/aia_pixel_size
+;      aia_tracks=make_tracks(aia_x, aia_y) & aia_xtrack=aia_tracks[*,0] & aia_ytrack=aia_tracks[*,1]
+;      aia_track_m=perp_direc(aia_xtrack, aia_ytrack, -1) & aia_track_p=perp_direc(aia_xtrack, aia_ytrack, +1)
+;      aia_xtrack_m=aia_track_m[*,0] & aia_ytrack_m=aia_track_m[*,1]
+;      aia_xtrack_p=aia_track_p[*,0] & aia_ytrack_p=aia_track_p[*,1]
+;      loadct, 39, /silent
+;      slit_col=97
+;      oplot, aia_xtrack*aia_pixel_size, aia_ytrack*aia_pixel_size, color=slit_col, linestyle=0, thick=3
+;      oplot, aia_xtrack_m[0:-2]*aia_pixel_size, aia_ytrack_m[0:-2]*aia_pixel_size, color=slit_col, linestyle=2, thick=3
+;      oplot, aia_xtrack_p[0:-2]*aia_pixel_size, aia_ytrack_p[0:-2]*aia_pixel_size, color=slit_col, linestyle=2, thick=3
+;      xyouts, (aia_x[-1]+1)*aia_pixel_size, (aia_y[-1]-0.5)*aia_pixel_size, '('+strtrim(i+1,2)+')', charsize=1, color=0, charthick=3
+;    endfor
+;
+;
+;;Plot 171 crop region
+;    aia_lct, wave=171, /load
+;    plot_image, alog(data171), xtitle='Solar X [Mm]', ytickformat="(A1)",$
+;     position = [left+wx+bg, bottom, left+2*wx+bg, bottom+wy], scale=[aia_pixel_size, aia_pixel_size], $
+;      title='AIA 171 ROI', xticks= 4, xtickv=[0, 10, 20, 30]
+;    xyouts, left+wx+bg+0.01,bottom+wy-0.021, '(d)', charsize=0.8, color=255, /normal
+;    for i = 0, 2 do begin
+;      aia_x=fixed_aia_xs[i*5:(i+1)*5-1]-crop_x1/aia_pixel_size
+;      aia_y=fixed_aia_ys[i*5:(i+1)*5-1]-crop_y1/aia_pixel_size
+;      aia_tracks=make_tracks(aia_x, aia_y) & aia_xtrack=aia_tracks[*,0] & aia_ytrack=aia_tracks[*,1]
+;      aia_track_m=perp_direc(aia_xtrack, aia_ytrack, -1) & aia_track_p=perp_direc(aia_xtrack, aia_ytrack, +1)
+;      aia_xtrack_m=aia_track_m[*,0] & aia_ytrack_m=aia_track_m[*,1]
+;      aia_xtrack_p=aia_track_p[*,0] & aia_ytrack_p=aia_track_p[*,1]
+;      loadct, 39, /silent
+;      oplot, aia_xtrack*aia_pixel_size, aia_ytrack*aia_pixel_size, color=slit_col, linestyle=0, thick=3
+;      oplot, aia_xtrack_m[0:-2]*aia_pixel_size, aia_ytrack_m[0:-2]*aia_pixel_size, color=slit_col, linestyle=2, thick=3
+;      oplot, aia_xtrack_p[0:-2]*aia_pixel_size, aia_ytrack_p[0:-2]*aia_pixel_size, color=slit_col, linestyle=2, thick=3
+;      xyouts, (aia_x[-1]+1)*aia_pixel_size, (aia_y[-1]-0.5)*aia_pixel_size, '('+strtrim(i+1,2)+')', charsize=1, color=255, charthick=3
+;    endfor
+;    
+;
+;;Plot 174 crop region
+;    aia_lct, wave=171, /load
+;    plot_image, alog(data174), xtitle='Solar X [Mm]', ytickformat="(A1)",$
+;      position = [left+2*wx+2*bg, bottom, left+3*wx+2*bg, bottom+wy], scale =[eui_pixel_size, eui_pixel_size], $
+;      title='HRIEUV 174 ROI', xticks= 5, xtickv=[0, 10, 20, 30, 40]
+;    xyouts, left+2*wx+2*bg+0.01,bottom+wy-0.021, '(e)', charsize=0.8, color=255, /normal
+;    for i = 0, 2 do begin
+;      eui_x=fixed_eui_xs[i*5:(i+1)*5-1]-crop_x1/eui_pixel_size
+;      eui_y=fixed_eui_ys[i*5:(i+1)*5-1]-crop_y1/eui_pixel_size
+;      eui_tracks=make_tracks(eui_x, eui_y) & eui_xtrack=eui_tracks[*,0] & eui_ytrack=eui_tracks[*,1]
+;      eui_track_m1=perp_direc(eui_xtrack, eui_ytrack, -1) & eui_track_p1=perp_direc(eui_xtrack, eui_ytrack, +1)
+;      eui_xtrack_m1=(eui_track_m1[*,0]) & eui_ytrack_m1=(eui_track_m1[*,1])
+;      eui_xtrack_p1=(eui_track_p1[*,0]) & eui_ytrack_p1=(eui_track_p1[*,1])
+;      eui_track_m2=perp_direc(eui_xtrack, eui_ytrack, -2) & eui_track_p2=perp_direc(eui_xtrack, eui_ytrack, +2)
+;      eui_xtrack_m2=(eui_track_m2[*,0]) & eui_ytrack_m2=(eui_track_m2[*,1])
+;      eui_xtrack_p2=(eui_track_p2[*,0]) & eui_ytrack_p2=(eui_track_p2[*,1])
+;      loadct, 7, /silent
+;      slit_col=140
+;      oplot, eui_xtrack*eui_pixel_size, eui_ytrack*eui_pixel_size, color=slit_col, linestyle=0, thick=3
+;      oplot, eui_xtrack_m1[0:-2]*eui_pixel_size, eui_ytrack_m1[0:-2]*eui_pixel_size, color=slit_col, linestyle=2, thick=3
+;      oplot, eui_xtrack_p1[0:-2]*eui_pixel_size, eui_ytrack_p1[0:-2]*eui_pixel_size, color=slit_col, linestyle=2, thick=3
+;      oplot, eui_xtrack_m2[0:-2]*eui_pixel_size, eui_ytrack_m2[0:-2]*eui_pixel_size, color=slit_col, linestyle=2, thick=3
+;      oplot, eui_xtrack_p2[0:-2]*eui_pixel_size, eui_ytrack_p2[0:-2]*eui_pixel_size, color=slit_col, linestyle=2, thick=3
+;      xyouts, (eui_x[-1]+2)*eui_pixel_size, (eui_y[-1]-1)*eui_pixel_size, '('+strtrim(i+1,2)+')', charsize=1, color=255, charthick=3
+;    endfor
+;
+;    ;adding box for window expansion
+;    ;EUI FoV on AIA FoV 
+;    xx1 = 0.227 & yy1 = 0.843
+;    xx2 = 0.363 & yy2 = 0.783
+;    xx3 = 0.3097 & yy3 = 0.6299043152
+;    xx4 = 0.1737 & yy4 = 0.6899043152
+;
+;    loadct, 7, /silent
+;    boxcol=140
+;    plots, [xx1, xx2, xx3, xx4, xx1], [yy1, yy2, yy3, yy4, yy1], color=boxcol, thick = 4, linestyle=0, /normal
+;    plots, [xx2, left+bigwx+tg], [yy2, bottom+wy+mg+bigwy], color=boxcol, thick = 4, linestyle=0, /normal
+;    plots, [xx3, left+bigwx+tg], [yy3, bottom+wy+mg], color=boxcol, thick = 4, linestyle=0, /normal
+;    
+;    ;HRIEUV
+;;    xx1 = 0.631 & yy1 = 0.73
+;;    xx2 = 0.6532 & yy2 = 0.705
+;    xx1 = 0.63581561 & yy1 = 0.71630213
+;    xx2 = 0.65648494 & yy2 = 0.72542095
+;    xx3 = 0.64838439 & yy3 = 0.74868849
+;    xx4 = 0.62771506 & yy4 = 0.73956967
+;    plots, [xx1, xx2, xx3, xx4, xx1], [yy1, yy2, yy3, yy4, yy1], color=boxcol, thick = 4, linestyle=0, /normal
+;    plots, [xx1, left+2*wx], [yy1, bottom+wy], color=boxcol, thick = 4, linestyle=0, /normal
+;    plots, [xx2, left+3*wx], [yy2, bottom+wy], color=boxcol, thick = 4, linestyle=0, /normal
+;    
+;    
+;    ;HMI and 171
+;    loadct, 39, /silent
+;    boxcol=97
+;    xx1 = 0.231 & yy1 = 0.761
+;    xx2 = 0.24165 & yy2 = 0.749
+;    plots, [xx1, xx2, xx2, xx1, xx1], [yy1, yy1, yy2, yy2, yy1], color=boxcol, thick = 4, linestyle=0, /normal
+;    plots, [xx1, left], [yy2, bottom+wy], color=boxcol, thick = 4, linestyle=0, /normal
+;;    plots, [xx2, left+wx], [yy1, bottom+wy], color=100, thick = 4, linestyle=0, /normal
+;;    plots, [xx1, left+wx], [yy1, bottom+wy], color=100, thick = 4, linestyle=0, /normal
+;    plots, [xx2, left+2*wx], [yy2, bottom+wy], color=boxcol, thick = 4, linestyle=0, /normal
+;    
+;    
+;
+;device, /close
 ;set_plot, 'X'
-plot_width=1000
-;wdef, 4, plot_width, plot_width*height
-;!p.charsize=3
-;!p.charthick=1
-;!p.thick=2
-
-;creating good quality plot for paper
-set_plot,'ps'
-!p.charthick=2.5
-!p.charsize=1.5
-!p.background=255
-!p.font=-1
-!p.multi=[0,1,5]
-!p.color=0
-;Use DEVICE to set PostScript device options
-width_eps=17
-height_eps=width_eps*height
-device,filename='Setting the Scene.eps',$
-  xsize=width_eps,ysize=height_eps,$
-  xoff=(21.0-width_eps)/2.0,yoff=(29.7-height_eps)/2.0,$
-  /color,bits=8,/Helvetica,isolatin1=1;,/bold
-
-
-
-;Plot full sun 171
-    aia_lct, wave=171, /load
-    plot_image, (data171full)^0.4, xtickformat="(A1)", ytickformat="(A1)",$; xtitle='Solar X [Mm]', ytitle='Solar Y [Mm]';, $
-      position = [left, bottom+wy+mg, left+bigwx, bottom+wy+mg+bigwy], /nosquare, title='AIA 171 Full FoV'
-;    xyouts, side+0.005, bottom+4*siz+gap+0.018, strtrim(index_1[0].date_obs,2), charsize=0.8, , color=255, /normal
-    xyouts, left+0.01, bottom+wy+mg+bigwy-0.021, '(a) '+strtrim(index171full[0].date_obs,2), charsize=0.8, color=255, /normal
-
-;Plot full HRIEUV
-    plot_image, alog(data174full), ytickformat="(A1)", xtickformat="(A1)",$
-      position = [left+bigwx+tg, bottom+wy+mg, 1-right, bottom+wy+mg+bigwy], /nosquare, title='HRIEUV Full FoV'
-    xyouts, left+bigwx+tg+0.01, bottom+wy+mg+bigwy-0.021, '(b) '+strtrim(index174full[0].date_obs,2), charsize=0.8, color=255, /normal
-
-;Plot HMI crop region
-    loadct, 0, /silent
-    plot_image, alog(dataHMI), xtitle='Solar X [Mm]', ytitle='Solar Y [Mm]',$
-      position = [left, bottom, left+wx, bottom+wy], scale=[hmi_pixel_size, hmi_pixel_size], $
-      title='HMI Continuum ROI', xticks= 4, xtickv=[0, 10, 20, 30]
-    xyouts, left+0.01,bottom+wy-0.021, '(c)', charsize=0.8, color=0, /normal
-    for i = 0, 2 do begin
-      aia_x=fixed_aia_xs[i*5:(i+1)*5-1]-crop_x1/aia_pixel_size
-      aia_y=fixed_aia_ys[i*5:(i+1)*5-1]-crop_y1/aia_pixel_size
-      aia_tracks=make_tracks(aia_x, aia_y) & aia_xtrack=aia_tracks[*,0] & aia_ytrack=aia_tracks[*,1]
-      aia_track_m=perp_direc(aia_xtrack, aia_ytrack, -1) & aia_track_p=perp_direc(aia_xtrack, aia_ytrack, +1)
-      aia_xtrack_m=aia_track_m[*,0] & aia_ytrack_m=aia_track_m[*,1]
-      aia_xtrack_p=aia_track_p[*,0] & aia_ytrack_p=aia_track_p[*,1]
-      loadct, 39, /silent
-      slit_col=97
-      oplot, aia_xtrack*aia_pixel_size, aia_ytrack*aia_pixel_size, color=slit_col, linestyle=0, thick=3
-      oplot, aia_xtrack_m[0:-2]*aia_pixel_size, aia_ytrack_m[0:-2]*aia_pixel_size, color=slit_col, linestyle=2, thick=3
-      oplot, aia_xtrack_p[0:-2]*aia_pixel_size, aia_ytrack_p[0:-2]*aia_pixel_size, color=slit_col, linestyle=2, thick=3
-      xyouts, (aia_x[-1]+1)*aia_pixel_size, (aia_y[-1]-0.5)*aia_pixel_size, '('+strtrim(i+1,2)+')', charsize=1, color=0, charthick=3
-    endfor
-
-
-;Plot 171 crop region
-    aia_lct, wave=171, /load
-    plot_image, alog(data171), xtitle='Solar X [Mm]', ytickformat="(A1)",$
-     position = [left+wx+bg, bottom, left+2*wx+bg, bottom+wy], scale=[aia_pixel_size, aia_pixel_size], $
-      title='AIA 171 ROI', xticks= 4, xtickv=[0, 10, 20, 30]
-    xyouts, left+wx+bg+0.01,bottom+wy-0.021, '(d)', charsize=0.8, color=255, /normal
-    for i = 0, 2 do begin
-      aia_x=fixed_aia_xs[i*5:(i+1)*5-1]-crop_x1/aia_pixel_size
-      aia_y=fixed_aia_ys[i*5:(i+1)*5-1]-crop_y1/aia_pixel_size
-      aia_tracks=make_tracks(aia_x, aia_y) & aia_xtrack=aia_tracks[*,0] & aia_ytrack=aia_tracks[*,1]
-      aia_track_m=perp_direc(aia_xtrack, aia_ytrack, -1) & aia_track_p=perp_direc(aia_xtrack, aia_ytrack, +1)
-      aia_xtrack_m=aia_track_m[*,0] & aia_ytrack_m=aia_track_m[*,1]
-      aia_xtrack_p=aia_track_p[*,0] & aia_ytrack_p=aia_track_p[*,1]
-      loadct, 39, /silent
-      oplot, aia_xtrack*aia_pixel_size, aia_ytrack*aia_pixel_size, color=slit_col, linestyle=0, thick=3
-      oplot, aia_xtrack_m[0:-2]*aia_pixel_size, aia_ytrack_m[0:-2]*aia_pixel_size, color=slit_col, linestyle=2, thick=3
-      oplot, aia_xtrack_p[0:-2]*aia_pixel_size, aia_ytrack_p[0:-2]*aia_pixel_size, color=slit_col, linestyle=2, thick=3
-      xyouts, (aia_x[-1]+1)*aia_pixel_size, (aia_y[-1]-0.5)*aia_pixel_size, '('+strtrim(i+1,2)+')', charsize=1, color=255, charthick=3
-    endfor
-    
-
-;Plot 174 crop region
-    aia_lct, wave=171, /load
-    plot_image, alog(data174), xtitle='Solar X [Mm]', ytickformat="(A1)",$
-      position = [left+2*wx+2*bg, bottom, left+3*wx+2*bg, bottom+wy], scale =[eui_pixel_size, eui_pixel_size], $
-      title='HRIEUV 174 ROI', xticks= 5, xtickv=[0, 10, 20, 30, 40]
-    xyouts, left+2*wx+2*bg+0.01,bottom+wy-0.021, '(e)', charsize=0.8, color=255, /normal
-    for i = 0, 2 do begin
-      eui_x=fixed_eui_xs[i*5:(i+1)*5-1]-crop_x1/eui_pixel_size
-      eui_y=fixed_eui_ys[i*5:(i+1)*5-1]-crop_y1/eui_pixel_size
-      eui_tracks=make_tracks(eui_x, eui_y) & eui_xtrack=eui_tracks[*,0] & eui_ytrack=eui_tracks[*,1]
-      eui_track_m1=perp_direc(eui_xtrack, eui_ytrack, -1) & eui_track_p1=perp_direc(eui_xtrack, eui_ytrack, +1)
-      eui_xtrack_m1=(eui_track_m1[*,0]) & eui_ytrack_m1=(eui_track_m1[*,1])
-      eui_xtrack_p1=(eui_track_p1[*,0]) & eui_ytrack_p1=(eui_track_p1[*,1])
-      eui_track_m2=perp_direc(eui_xtrack, eui_ytrack, -2) & eui_track_p2=perp_direc(eui_xtrack, eui_ytrack, +2)
-      eui_xtrack_m2=(eui_track_m2[*,0]) & eui_ytrack_m2=(eui_track_m2[*,1])
-      eui_xtrack_p2=(eui_track_p2[*,0]) & eui_ytrack_p2=(eui_track_p2[*,1])
-      loadct, 7, /silent
-      slit_col=140
-      oplot, eui_xtrack*eui_pixel_size, eui_ytrack*eui_pixel_size, color=slit_col, linestyle=0, thick=3
-      oplot, eui_xtrack_m1[0:-2]*eui_pixel_size, eui_ytrack_m1[0:-2]*eui_pixel_size, color=slit_col, linestyle=2, thick=3
-      oplot, eui_xtrack_p1[0:-2]*eui_pixel_size, eui_ytrack_p1[0:-2]*eui_pixel_size, color=slit_col, linestyle=2, thick=3
-      oplot, eui_xtrack_m2[0:-2]*eui_pixel_size, eui_ytrack_m2[0:-2]*eui_pixel_size, color=slit_col, linestyle=2, thick=3
-      oplot, eui_xtrack_p2[0:-2]*eui_pixel_size, eui_ytrack_p2[0:-2]*eui_pixel_size, color=slit_col, linestyle=2, thick=3
-      xyouts, (eui_x[-1]+2)*eui_pixel_size, (eui_y[-1]-1)*eui_pixel_size, '('+strtrim(i+1,2)+')', charsize=1, color=255, charthick=3
-    endfor
-
-    ;adding box for window expansion
-    ;EUI FoV on AIA FoV 
-    xx1 = 0.227 & yy1 = 0.843
-    xx2 = 0.363 & yy2 = 0.783
-    xx3 = 0.3097 & yy3 = 0.6299043152
-    xx4 = 0.1737 & yy4 = 0.6899043152
-
-    loadct, 7, /silent
-    boxcol=140
-    plots, [xx1, xx2, xx3, xx4, xx1], [yy1, yy2, yy3, yy4, yy1], color=boxcol, thick = 4, linestyle=0, /normal
-    plots, [xx2, left+bigwx+tg], [yy2, bottom+wy+mg+bigwy], color=boxcol, thick = 4, linestyle=0, /normal
-    plots, [xx3, left+bigwx+tg], [yy3, bottom+wy+mg], color=boxcol, thick = 4, linestyle=0, /normal
-    
-    ;HRIEUV
-;    xx1 = 0.631 & yy1 = 0.73
-;    xx2 = 0.6532 & yy2 = 0.705
-    xx1 = 0.63581561 & yy1 = 0.71630213
-    xx2 = 0.65648494 & yy2 = 0.72542095
-    xx3 = 0.64838439 & yy3 = 0.74868849
-    xx4 = 0.62771506 & yy4 = 0.73956967
-    plots, [xx1, xx2, xx3, xx4, xx1], [yy1, yy2, yy3, yy4, yy1], color=boxcol, thick = 4, linestyle=0, /normal
-    plots, [xx1, left+2*wx], [yy1, bottom+wy], color=boxcol, thick = 4, linestyle=0, /normal
-    plots, [xx2, left+3*wx], [yy2, bottom+wy], color=boxcol, thick = 4, linestyle=0, /normal
-    
-    
-    ;HMI and 171
-    loadct, 39, /silent
-    boxcol=97
-    xx1 = 0.231 & yy1 = 0.761
-    xx2 = 0.24165 & yy2 = 0.749
-    plots, [xx1, xx2, xx2, xx1, xx1], [yy1, yy1, yy2, yy2, yy1], color=boxcol, thick = 4, linestyle=0, /normal
-    plots, [xx1, left], [yy2, bottom+wy], color=boxcol, thick = 4, linestyle=0, /normal
-;    plots, [xx2, left+wx], [yy1, bottom+wy], color=100, thick = 4, linestyle=0, /normal
-;    plots, [xx1, left+wx], [yy1, bottom+wy], color=100, thick = 4, linestyle=0, /normal
-    plots, [xx2, left+2*wx], [yy2, bottom+wy], color=boxcol, thick = 4, linestyle=0, /normal
-    
-    
-
-device, /close
-set_plot, 'X'
 
 ;;Fig. 2 - TD Analysis (.eps)
 ;;To use this section, need to comment out any plotting/window making with wdef and opening alternative windows
@@ -693,284 +698,284 @@ set_plot, 'X'
 ;;event1_eui_td_2 = eui_td_2
 ;;event1_eui_td_3 = eui_td_3
 ;;event1_eui_td_4 = eui_td_5
-;
-;; ----- GENERAL PLOTTING SETUP -----
-;set_plot,'ps'
-;!p.multi=[0, 2, 7]      ; 2 columns, 7 rows
-;!p.charsize=1.4
-;!p.color=0
-;!p.background=255
-;!p.charthick=2.5
-;
-;width_eps=20
-;height_eps=19.0        ; ~2x original height (was 9.5)
-;
-;device,filename='Decay Length Parallel.eps',$ 
-;   xsize=width_eps,ysize=height_eps,$ 
-;   xoff=(21.0-width_eps)/2.0,yoff=(29.7-height_eps)/2.0,$ 
-;  /color,bits=8,/Helvetica,isolatin1=1
-;
-;;wdef, 0, 600, 700
-;
-;
-;; ----- PANEL LAYOUT CONTROL -----
-;gap=0.025           ; regular spacing between adjacent rows
-;group_gap=0.07     ; extra gap between Event 1 (top 4) and Event 2 (bottom 3)
-;
-;cgap=0.02          ; horizontal gap between left and right panels
-;bgap=0.08          ; bottom margin
-;tgap=0.06          ; top margin
-;sgap=0.10          ; left margin
-;
-;nrows_total  = 7
-;nrows_event2 = 3
-;nrows_event1 = 4
-;
-;; panel height from available vertical space
-;avail = 1.0 - bgap - tgap - (nrows_total-1)*gap - group_gap
-;h = avail / float(nrows_total)
-;
-;; panel width for 2 columns
-;w = (1.0 - 2*sgap - cgap) / 2.0
-;
-;
-;; ----- DECAY LENGTH & PERIOD INPUTS -----
-;; EVENT 1 (4 slits) 
-;event1_aia_dls     = [4.9, 3.7, 2.5, 2.2]
-;event1_aia_dl_errs = [0.4, 0.3, 0.1, 0.5]
-;event1_eui_dls     = [3.7, 2.4, 5.8, 3.7]
-;event1_eui_dl_errs = [0.7, 0.2, 0.9, 0.3]
-;
-;; EVENT 2 (3 slits) 
-;event2_aia_dls     = [2.1, 2.1, 1.7]
-;event2_aia_dl_errs = [0.1, 0.1, 0.1]
-;event2_eui_dls     = [2.0, 1.8, 1.5]
-;event2_eui_dl_errs = [0.1, 0.1, 0.1]
-;
-;
-;; ============================================================
-;; ======================= EVENT 1 (TOP) ======================
-;; rows 6..3 (top to bottom), slits 1..4
-;; ============================================================
-;eui_cad = 3.
-;aia_pixel_size=0.433
-;eui_pixel_size=0.194
-;for j = 0, 3 do begin
-;  print, 'j = '+strtrim(j)
-;  ; Row index in the 7-row stack:
-;  ; j=0 (slit1) -> row=6 (top)
-;  ; j=3 (slit4) -> row=3
-;  row = (nrows_total-1) - j
-;
-;  ; y0 calculation with group_gap applied for rows >= nrows_event2
-;  ; (Event 1 rows are 3..6, so they all get the group_gap offset)
-;  y0 = bgap + row*(h + gap) + group_gap
-;  y1 = y0 + h
-;
-;  ; Fetch TD maps by name (Event 1) - NO "_crop"
-;  aia_name = 'event1_aia_td_' + strtrim(j+1,2)
-;  print, aia_name
-;  eui_name = 'event1_eui_td_' + strtrim(j+1,2)
-;  aia_map = scope_varfetch(aia_name)
-;  eui_map = scope_varfetch(eui_name)
-;
-;  ; Crop TD maps to 8 Mm vertically
-;  aia_crops = [1.5, 1.0, 0, 0]
-;  eui_crops = [0, 0, 3.2, 0]
-;  aia_map = aia_map[*, aia_crops[j]:aia_crops[j]+8./aia_pixel_size]
-;  eui_map = eui_map[*, eui_crops[j]:eui_crops[j]+8./eui_pixel_size]
-;  
-;  ; ------------------------------------------------------------
-;  ; DETREND using SMOOTH over 250 s with mirrored edges
-;  ; (smooth along TIME axis, assumed to be the FIRST dimension)
-;  ; ------------------------------------------------------------
-;  win_s = 250.0
-;  
-;  ; AIA: window in samples
-;  w_aia = long(round(win_s / aia_cad))
-;  if w_aia lt 3 then w_aia = 3
-;  if (w_aia mod 2) eq 0 then w_aia = w_aia + 1   ; force odd
-;  
-;  ; EUI: window in samples
-;  w_eui = long(round(win_s / eui_cad))
-;  if w_eui lt 3 then w_eui = 3
-;  if (w_eui mod 2) eq 0 then w_eui = w_eui + 1   ; force odd
-;  
-;  ; Smooth along TIME (dimension 1 in SMOOTH's box size)
-;  aia_bg  = smooth(aia_map, [w_aia, 1], /edge_mirror)
-;  eui_bg  = smooth(eui_map, [w_eui, 1], /edge_mirror)
-;  
-;  aia_map = aia_map - aia_bg
-;  eui_map = eui_map - eui_bg
-;
-;
-;  ; Time axis on bottom row of Event 1 (slit 4, j=3)
-;  if j eq 3 then xtitle_str = 'Time [min]' else xtitle_str = ''
-;  if j eq 3 then xtickformat = "(I0)" else xtickformat="(A1)"
-;
-;  ; ----- AIA PANEL (Event 1) -----
-;  aia_lct, wave=171, /load
-;  plot_image, (aia_map), /nosquare, $
-;    xtitle=xtitle_str, ytitle='Distance [Mm]', $
-;    title='AIA, Slit '+strtrim(j+1,2), $
-;    scale=[aia_cad/60., aia_pixel_size], $
-;    position=[sgap, y0, sgap+w, y1], $
-;    xtickformat=xtickformat
-;  if j eq 0 then let = 'a'
-;  if j eq 1 then let = 'b'
-;  if j eq 2 then let = 'c'
-;  if j eq 3 then let = 'd'
-;  xyouts, sgap+0.007, y1-0.02, '('+let+',i)', color=255, /normal, charsize=0.9, charthick=3
-;
-;  loadct, 39, /silent
-;  oplot, [0, n_elements(aia_map[*,0])], [event1_aia_dls[j], event1_aia_dls[j]], $
-;         color=255, linestyle=2, thick=4
-;  x1=0 & x2=n_elements(aia_map[*,0])
-;  yb=event1_aia_dls[j]-event1_aia_dl_errs[j]
-;  yt=event1_aia_dls[j]+event1_aia_dl_errs[j]
-;  oplot, [x1, x2, x2, x1, x1], [yb, yb, yt, yt, yb], color=255, thick=1.5
-;  
-;
-;  ; ----- EUI PANEL (Event 1) -----
-;  aia_lct, wave=171, /load
-;  plot_image, bright_spot(eui_map, 1600), /nosquare, $
-;    xtitle=xtitle_str, $
-;    title='EUI, Slit '+strtrim(j+1,2), $
-;    scale=[eui_cad/60., eui_pixel_size], $
-;    position=[sgap+w+cgap, y0, sgap+2*w+cgap, y1], $
-;    ytickformat="(A1)", xtickformat=xtickformat
-;  xyouts, sgap+w+cgap+0.007, y1-0.02, '('+let+',ii)', color=255, /normal, charsize=0.9, charthick=3
-;
-;  loadct, 39, /silent
-;  oplot, [0, n_elements(eui_map[*,0])], [event1_eui_dls[j], event1_eui_dls[j]], $
-;         color=255, linestyle=2, thick=4
-;  x1=0 & x2=n_elements(eui_map[*,0])
-;  yb=event1_eui_dls[j]-event1_eui_dl_errs[j]
-;  yt=event1_eui_dls[j]+event1_eui_dl_errs[j]
-;  oplot, [x1, x2, x2, x1, x1], [yb, yb, yt, yt, yb], color=255, thick=1.5
-;
-;endfor
-;
-;
-;; ============================================================
-;; ====================== EVENT 2 (BOTTOM) ====================
-;; rows 2..0 (top to bottom), slits 1..3
-;; ============================================================
-;eui_cad = 5.
-;aia_pixel_size=0.431
-;eui_pixel_size=0.304
-;for j = 0, 2 do begin
-;
-;  ; Row index for Event 2 group:
-;  ; j=0 (slit1) -> row=2 (top of bottom group)
-;  ; j=2 (slit3) -> row=0 (bottom of figure)
-;  row = (nrows_event2-1) - j
-;
-;  ; Event 2 rows do NOT get the group_gap offset
-;  y0 = bgap + row*(h + gap)
-;  y1 = y0 + h
-;
-;  ; Fetch TD maps by name (Event 2) - NO "_crop"
-;  aia_name = 'event2_aia_td_' + strtrim(j+1,2)
-;  eui_name = 'event2_eui_td_' + strtrim(j+1,2)
-;  aia_map = scope_varfetch(aia_name)
-;  eui_map = scope_varfetch(eui_name)
-;
-;  ; Crop TD maps to 8 Mm vertically
-;  aia_crops = [1.9, 1.0, 0]
-;  eui_crops = [0, 0, 0.9]
-;  aia_map = aia_map[*, aia_crops[j]:aia_crops[j]+8./aia_pixel_size]
-;  eui_map = eui_map[*, eui_crops[j]:eui_crops[j]+8./eui_pixel_size]
-;  
-;  ; ------------------------------------------------------------
-;  ; DETREND using SMOOTH over 250 s with mirrored edges
-;  ; (smooth along TIME axis, assumed to be the FIRST dimension)
-;  ; ------------------------------------------------------------
-;  win_s = 250.0
-;  
-;  ; AIA: window in samples
-;  w_aia = long(round(win_s / aia_cad))
-;  if w_aia lt 3 then w_aia = 3
-;  if (w_aia mod 2) eq 0 then w_aia = w_aia + 1   ; force odd
-;  
-;  ; EUI: window in samples
-;  w_eui = long(round(win_s / eui_cad))
-;  if w_eui lt 3 then w_eui = 3
-;  if (w_eui mod 2) eq 0 then w_eui = w_eui + 1   ; force odd
-;  
-;  ; Smooth along TIME (dimension 1 in SMOOTH's box size)
-;  aia_bg  = smooth(aia_map, [w_aia, 1], /edge_mirror)
-;  eui_bg  = smooth(eui_map, [w_eui, 1], /edge_mirror)
-;  
-;  aia_map = aia_map - aia_bg
-;  eui_map = eui_map - eui_bg
-;
-;
-;  ; Time axis on bottom row of Event 2 (slit 3, j=2)
-;  if j eq 2 then xtitle_str = 'Time [min]' else xtitle_str = ''
-;  if j eq 2 then xtickformat = "(I0)" else xtickformat="(A1)"
-;
-;  ; ----- AIA PANEL (Event 2) -----
-;  aia_lct, wave=171, /load
-;  plot_image, (aia_map), /nosquare, $
-;    xtitle=xtitle_str, ytitle='Distance [Mm]', $
-;    title='AIA, Slit '+strtrim(j+1,2), $
-;    scale=[aia_cad/60., aia_pixel_size], $
-;    position=[sgap, y0, sgap+w, y1], $
-;    xtickformat=xtickformat
-;    
-;  if j eq 0 then let = 'e'
-;  if j eq 1 then let = 'f'
-;  if j eq 2 then let = 'g'
-;  xyouts, sgap+0.007, y1-0.02, '('+let+',i)', color=255, /normal, charsize=0.9, charthick=3
-;
-;  loadct, 39, /silent
-;  oplot, [0, n_elements(aia_map[*,0])], [event2_aia_dls[j], event2_aia_dls[j]], $
-;         color=255, linestyle=2, thick=4
-;  x1=0 & x2=n_elements(aia_map[*,0])
-;  yb=event2_aia_dls[j]-event2_aia_dl_errs[j]
-;  yt=event2_aia_dls[j]+event2_aia_dl_errs[j]
-;  oplot, [x1, x2, x2, x1, x1], [yb, yb, yt, yt, yb], color=255, thick=1.5
-;
-;
-;  ; ----- EUI PANEL (Event 2) -----
-;  aia_lct, wave=171, /load
-;  plot_image, (eui_map), /nosquare, $
-;    xtitle=xtitle_str, $
-;    title='EUI, Slit '+strtrim(j+1,2), $
-;    scale=[eui_cad/60., eui_pixel_size], $
-;    position=[sgap+w+cgap, y0, sgap+2*w+cgap, y1], $
-;    ytickformat="(A1)", xtickformat=xtickformat
-;  xyouts, sgap+w+cgap+0.007, y1-0.02, '('+let+',ii)', color=255, /normal, charsize=0.9, charthick=3
-;
-;  loadct, 39, /silent
-;  oplot, [0, n_elements(eui_map[*,0])], [event2_eui_dls[j], event2_eui_dls[j]], $
-;         color=255, linestyle=2, thick=4
-;  x1=0 & x2=n_elements(eui_map[*,0])
-;  yb=event2_eui_dls[j]-event2_eui_dl_errs[j]
-;  yt=event2_eui_dls[j]+event2_eui_dl_errs[j]
-;  oplot, [x1, x2, x2, x1, x1], [yb, yb, yt, yt, yb], color=255, thick=1.5
-;
-;endfor
-;
-;
-;; ----- EVENT HEADERS (centered over both columns) -----
-;xmid = sgap + (2*w + cgap)/2.0
-;
-;; Event 1 header: above top row (row=6) which has y1 = bgap + 6*(h+gap) + group_gap + h
-;y_event1_top = bgap + (nrows_total-1)*(h+gap) + group_gap + h
-;xyouts, xmid, y_event1_top + 0.025, 'Event 1 - 2024-10-24', /normal, align=0.5, $
-;       charsize=1.1, charthick=3, color=0
-;
-;; Event 2 header: above row=2 -> y1 = bgap + 2*(h+gap) + h
-;y_event2_top = bgap + (nrows_event2-1)*(h+gap) + h
-;xyouts, xmid, y_event2_top + 0.025, 'Event 2 - 2021-11-05', /normal, align=0.5, $
-;       charsize=1.1, charthick=3, color=0
-;
-;
-;
-;device, /close
-;set_plot, 'X'
+
+; ----- GENERAL PLOTTING SETUP -----
+set_plot,'ps'
+!p.multi=[0, 2, 7]      ; 2 columns, 7 rows
+!p.charsize=1.4
+!p.color=0
+!p.background=255
+!p.charthick=2.5
+
+width_eps=20
+height_eps=19.0        ; ~2x original height (was 9.5)
+
+device,filename='Decay Length Parallel NEW.eps',$ 
+   xsize=width_eps,ysize=height_eps,$ 
+   xoff=(21.0-width_eps)/2.0,yoff=(29.7-height_eps)/2.0,$ 
+  /color,bits=8,/Helvetica,isolatin1=1
+
+;wdef, 0, 600, 700
+
+
+; ----- PANEL LAYOUT CONTROL -----
+gap=0.025           ; regular spacing between adjacent rows
+group_gap=0.07     ; extra gap between Event 1 (top 4) and Event 2 (bottom 3)
+
+cgap=0.02          ; horizontal gap between left and right panels
+bgap=0.08          ; bottom margin
+tgap=0.06          ; top margin
+sgap=0.10          ; left margin
+
+nrows_total  = 7
+nrows_event2 = 3
+nrows_event1 = 4
+
+; panel height from available vertical space
+avail = 1.0 - bgap - tgap - (nrows_total-1)*gap - group_gap
+h = avail / float(nrows_total)
+
+; panel width for 2 columns
+w = (1.0 - 2*sgap - cgap) / 2.0
+
+
+; ----- DECAY LENGTH & PERIOD INPUTS -----
+; EVENT 1 (4 slits) 
+event1_aia_dls     = [4.5, 3.8, 2.2, 1.5]
+event1_aia_dl_errs = [0.3, 0.6, 0.1, 0.1]
+event1_eui_dls     = [2.6, 3.6, 5.0, 3.0]
+event1_eui_dl_errs = [0.3, 0.5, 1.0, 0.2]
+
+; EVENT 2 (3 slits) 
+event2_aia_dls     = [2.1, 2.1, 1.7]
+event2_aia_dl_errs = [0.1, 0.1, 0.1]
+event2_eui_dls     = [2.1, 1.8, 1.5]
+event2_eui_dl_errs = [0.1, 0.1, 0.1]
+
+
+; ============================================================
+; ======================= EVENT 1 (TOP) ======================
+; rows 6..3 (top to bottom), slits 1..4
+; ============================================================
+eui_cad = 3.
+aia_pixel_size=0.433
+eui_pixel_size=0.194
+for j = 0, 3 do begin
+  print, 'j = '+strtrim(j)
+  ; Row index in the 7-row stack:
+  ; j=0 (slit1) -> row=6 (top)
+  ; j=3 (slit4) -> row=3
+  row = (nrows_total-1) - j
+
+  ; y0 calculation with group_gap applied for rows >= nrows_event2
+  ; (Event 1 rows are 3..6, so they all get the group_gap offset)
+  y0 = bgap + row*(h + gap) + group_gap
+  y1 = y0 + h
+
+  ; Fetch TD maps by name (Event 1) - NO "_crop"
+  aia_name = 'event1_aia_td_' + strtrim(j+1,2)
+  print, aia_name
+  eui_name = 'event1_eui_td_' + strtrim(j+1,2)
+  aia_map = scope_varfetch(aia_name)
+  eui_map = scope_varfetch(eui_name)
+
+  ; Crop TD maps to 8 Mm vertically
+  aia_crops = [1.5, 1.0, 0, 0]
+  eui_crops = [0, 0, 3.2, 0]
+  aia_map = aia_map[*, aia_crops[j]:aia_crops[j]+8./aia_pixel_size]
+  eui_map = eui_map[*, eui_crops[j]:eui_crops[j]+8./eui_pixel_size]
+  
+  ; ------------------------------------------------------------
+  ; DETREND using SMOOTH over 250 s with mirrored edges
+  ; (smooth along TIME axis, assumed to be the FIRST dimension)
+  ; ------------------------------------------------------------
+  win_s = 250.0
+  
+  ; AIA: window in samples
+  w_aia = long(round(win_s / aia_cad))
+  if w_aia lt 3 then w_aia = 3
+  if (w_aia mod 2) eq 0 then w_aia = w_aia + 1   ; force odd
+  
+  ; EUI: window in samples
+  w_eui = long(round(win_s / eui_cad))
+  if w_eui lt 3 then w_eui = 3
+  if (w_eui mod 2) eq 0 then w_eui = w_eui + 1   ; force odd
+  
+  ; Smooth along TIME (dimension 1 in SMOOTH's box size)
+  aia_bg  = smooth(aia_map, [w_aia, 1], /edge_mirror)
+  eui_bg  = smooth(eui_map, [w_eui, 1], /edge_mirror)
+  
+  aia_map = aia_map - aia_bg
+  eui_map = eui_map - eui_bg
+
+
+  ; Time axis on bottom row of Event 1 (slit 4, j=3)
+  if j eq 3 then xtitle_str = 'Time [min]' else xtitle_str = ''
+  if j eq 3 then xtickformat = "(I0)" else xtickformat="(A1)"
+
+  ; ----- AIA PANEL (Event 1) -----
+  aia_lct, wave=171, /load
+  plot_image, (aia_map), /nosquare, $
+    xtitle=xtitle_str, ytitle='Distance [Mm]', $
+    title='AIA, Slit '+strtrim(j+1,2), $
+    scale=[aia_cad/60., aia_pixel_size], $
+    position=[sgap, y0, sgap+w, y1], $
+    xtickformat=xtickformat
+  if j eq 0 then let = 'a'
+  if j eq 1 then let = 'b'
+  if j eq 2 then let = 'c'
+  if j eq 3 then let = 'd'
+  xyouts, sgap+0.007, y1-0.02, '('+let+',i)', color=255, /normal, charsize=0.9, charthick=3
+
+  loadct, 39, /silent
+  oplot, [0, n_elements(aia_map[*,0])], [event1_aia_dls[j], event1_aia_dls[j]], $
+         color=255, linestyle=2, thick=4
+  x1=0 & x2=n_elements(aia_map[*,0])
+  yb=event1_aia_dls[j]-event1_aia_dl_errs[j]
+  yt=event1_aia_dls[j]+event1_aia_dl_errs[j]
+  oplot, [x1, x2, x2, x1, x1], [yb, yb, yt, yt, yb], color=255, thick=1.5
+  
+
+  ; ----- EUI PANEL (Event 1) -----
+  aia_lct, wave=171, /load
+  plot_image, bright_spot(eui_map, 1600), /nosquare, $
+    xtitle=xtitle_str, $
+    title='EUI, Slit '+strtrim(j+1,2), $
+    scale=[eui_cad/60., eui_pixel_size], $
+    position=[sgap+w+cgap, y0, sgap+2*w+cgap, y1], $
+    ytickformat="(A1)", xtickformat=xtickformat
+  xyouts, sgap+w+cgap+0.007, y1-0.02, '('+let+',ii)', color=255, /normal, charsize=0.9, charthick=3
+
+  loadct, 39, /silent
+  oplot, [0, n_elements(eui_map[*,0])], [event1_eui_dls[j], event1_eui_dls[j]], $
+         color=255, linestyle=2, thick=4
+  x1=0 & x2=n_elements(eui_map[*,0])
+  yb=event1_eui_dls[j]-event1_eui_dl_errs[j]
+  yt=event1_eui_dls[j]+event1_eui_dl_errs[j]
+  oplot, [x1, x2, x2, x1, x1], [yb, yb, yt, yt, yb], color=255, thick=1.5
+
+endfor
+
+
+; ============================================================
+; ====================== EVENT 2 (BOTTOM) ====================
+; rows 2..0 (top to bottom), slits 1..3
+; ============================================================
+eui_cad = 5.
+aia_pixel_size=0.431
+eui_pixel_size=0.304
+for j = 0, 2 do begin
+
+  ; Row index for Event 2 group:
+  ; j=0 (slit1) -> row=2 (top of bottom group)
+  ; j=2 (slit3) -> row=0 (bottom of figure)
+  row = (nrows_event2-1) - j
+
+  ; Event 2 rows do NOT get the group_gap offset
+  y0 = bgap + row*(h + gap)
+  y1 = y0 + h
+
+  ; Fetch TD maps by name (Event 2) - NO "_crop"
+  aia_name = 'event2_aia_td_' + strtrim(j+1,2)
+  eui_name = 'event2_eui_td_' + strtrim(j+1,2)
+  aia_map = scope_varfetch(aia_name)
+  eui_map = scope_varfetch(eui_name)
+
+  ; Crop TD maps to 8 Mm vertically
+  aia_crops = [1.9, 1.0, 0] + [0,0.92,0]
+  eui_crops = [0, 0, 0.9] + [0,1.52,0]
+  aia_map = aia_map[*, aia_crops[j]:aia_crops[j]+8./aia_pixel_size]
+  eui_map = eui_map[*, eui_crops[j]:eui_crops[j]+8./eui_pixel_size]
+  
+  ; ------------------------------------------------------------
+  ; DETREND using SMOOTH over 250 s with mirrored edges
+  ; (smooth along TIME axis, assumed to be the FIRST dimension)
+  ; ------------------------------------------------------------
+  win_s = 250.0
+  
+  ; AIA: window in samples
+  w_aia = long(round(win_s / aia_cad))
+  if w_aia lt 3 then w_aia = 3
+  if (w_aia mod 2) eq 0 then w_aia = w_aia + 1   ; force odd
+  
+  ; EUI: window in samples
+  w_eui = long(round(win_s / eui_cad))
+  if w_eui lt 3 then w_eui = 3
+  if (w_eui mod 2) eq 0 then w_eui = w_eui + 1   ; force odd
+  
+  ; Smooth along TIME (dimension 1 in SMOOTH's box size)
+  aia_bg  = smooth(aia_map, [w_aia, 1], /edge_mirror)
+  eui_bg  = smooth(eui_map, [w_eui, 1], /edge_mirror)
+  
+  aia_map = aia_map - aia_bg
+  eui_map = eui_map - eui_bg
+
+
+  ; Time axis on bottom row of Event 2 (slit 3, j=2)
+  if j eq 2 then xtitle_str = 'Time [min]' else xtitle_str = ''
+  if j eq 2 then xtickformat = "(I0)" else xtickformat="(A1)"
+
+  ; ----- AIA PANEL (Event 2) -----
+  aia_lct, wave=171, /load
+  plot_image, (aia_map), /nosquare, $
+    xtitle=xtitle_str, ytitle='Distance [Mm]', $
+    title='AIA, Slit '+strtrim(j+1,2), $
+    scale=[aia_cad/60., aia_pixel_size], $
+    position=[sgap, y0, sgap+w, y1], $
+    xtickformat=xtickformat
+    
+  if j eq 0 then let = 'e'
+  if j eq 1 then let = 'f'
+  if j eq 2 then let = 'g'
+  xyouts, sgap+0.007, y1-0.02, '('+let+',i)', color=255, /normal, charsize=0.9, charthick=3
+
+  loadct, 39, /silent
+  oplot, [0, n_elements(aia_map[*,0])], [event2_aia_dls[j], event2_aia_dls[j]], $
+         color=255, linestyle=2, thick=4
+  x1=0 & x2=n_elements(aia_map[*,0])
+  yb=event2_aia_dls[j]-event2_aia_dl_errs[j]
+  yt=event2_aia_dls[j]+event2_aia_dl_errs[j]
+  oplot, [x1, x2, x2, x1, x1], [yb, yb, yt, yt, yb], color=255, thick=1.5
+
+
+  ; ----- EUI PANEL (Event 2) -----
+  aia_lct, wave=171, /load
+  plot_image, (eui_map), /nosquare, $
+    xtitle=xtitle_str, $
+    title='EUI, Slit '+strtrim(j+1,2), $
+    scale=[eui_cad/60., eui_pixel_size], $
+    position=[sgap+w+cgap, y0, sgap+2*w+cgap, y1], $
+    ytickformat="(A1)", xtickformat=xtickformat
+  xyouts, sgap+w+cgap+0.007, y1-0.02, '('+let+',ii)', color=255, /normal, charsize=0.9, charthick=3
+
+  loadct, 39, /silent
+  oplot, [0, n_elements(eui_map[*,0])], [event2_eui_dls[j], event2_eui_dls[j]], $
+         color=255, linestyle=2, thick=4
+  x1=0 & x2=n_elements(eui_map[*,0])
+  yb=event2_eui_dls[j]-event2_eui_dl_errs[j]
+  yt=event2_eui_dls[j]+event2_eui_dl_errs[j]
+  oplot, [x1, x2, x2, x1, x1], [yb, yb, yt, yt, yb], color=255, thick=1.5
+
+endfor
+
+
+; ----- EVENT HEADERS (centered over both columns) -----
+xmid = sgap + (2*w + cgap)/2.0
+
+; Event 1 header: above top row (row=6) which has y1 = bgap + 6*(h+gap) + group_gap + h
+y_event1_top = bgap + (nrows_total-1)*(h+gap) + group_gap + h
+xyouts, xmid, y_event1_top + 0.025, 'Event 1 - 2024-10-24', /normal, align=0.5, $
+       charsize=1.1, charthick=3, color=0
+
+; Event 2 header: above row=2 -> y1 = bgap + 2*(h+gap) + h
+y_event2_top = bgap + (nrows_event2-1)*(h+gap) + h
+xyouts, xmid, y_event2_top + 0.025, 'Event 2 - 2021-11-05', /normal, align=0.5, $
+       charsize=1.1, charthick=3, color=0
+
+
+
+device, /close
+set_plot, 'X'
 
 END
 
